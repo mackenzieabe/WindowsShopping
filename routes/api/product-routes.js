@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
-const sequalize = require('../../config/connection')
+//const sequalize = require('../../config/connection')
 
 // The `/api/products` endpoint
 
@@ -122,7 +122,7 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
-  Product.destory({
+  Product.destroy({
     where: {
       id: req.params.id
     }
