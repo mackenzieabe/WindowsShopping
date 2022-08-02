@@ -9,20 +9,11 @@ const sequalize = require('../../config/connection')
 // be sure to include its associated Category and Tag data
 router.get('/', (req, res) => {
   Product.findlAll({
-    attributes: [
-      'id',
-      'product_name',
-      'price',
-      'stock',
-    ],
     include: [
+      Category,
       {
-        model: Category,
-        attributes: ['id'],
-        include: {
-          model: ProductTag,
-          attributes: ['id']
-        }
+        model: Tag,
+        through: ProductTag
       }
     ]
       .then(dbProductData => res.json(dbProductData))
@@ -41,17 +32,23 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    attributes: [
-
+    include: [
+      Category,
+      {
+        model: Tag,
+        through: ProductTag
+      }
     ]
+      .then(dbProductData => res.json(dbProductData))
+      .catch(err => {
+        console.log(err);
+        res.status(500).json(err);
+      })
   })
 });
 
 // create new product
 router.post('/', (req, res) => {
-  Product.create({
-    product_name: req.body.product_name,
-  })
   /* req.body should look like this...
     {
       product_name: "Basketball",
